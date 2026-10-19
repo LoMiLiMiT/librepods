@@ -40,8 +40,7 @@ data class AppSettingsUiState(
     val timeUntilFOSSPremiumExpiry: Long = 0L,
     val m3eEnabled: Boolean = false,
     val offListeningMode: Boolean = true,
-    val toggleListeningModes: List<Int> = emptyList(),
-    val showToggleInAppList: Boolean = false
+    val toggleListeningModes: List<Int> = emptyList()
 )
 
 class AppSettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -158,8 +157,7 @@ class AppSettingsViewModel(application: Application) : AndroidViewModel(applicat
                 showIslandPopup = sharedPreferences.getBoolean("show_island_popup", true),
                 m3eEnabled = sharedPreferences.getBoolean("m3e_enabled", true),
                 offListeningMode = sharedPreferences.getBoolean("off_listening_mode", true),
-                toggleListeningModes = ToggleListeningModeActivity.getModes(sharedPreferences),
-                showToggleInAppList = ToggleListeningModeActivity.isShownInAppList(getApplication())
+                toggleListeningModes = ToggleListeningModeActivity.getModes(sharedPreferences)
             )
         }
     }
@@ -223,11 +221,6 @@ class AppSettingsViewModel(application: Application) : AndroidViewModel(applicat
             putString(ToggleListeningModeActivity.PREF_KEY, newModes.joinToString(","))
         }
         _uiState.update { it.copy(toggleListeningModes = newModes) }
-    }
-
-    fun setShowToggleInAppList(shown: Boolean) {
-        ToggleListeningModeActivity.setShownInAppList(getApplication(), shown)
-        _uiState.update { it.copy(showToggleInAppList = shown) }
     }
 
     fun setUseAlternateHeadTrackingPackets(enabled: Boolean) {
