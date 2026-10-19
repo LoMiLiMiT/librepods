@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,6 +48,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -64,6 +66,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -81,7 +84,9 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import me.kavishdevar.librepods.BuildConfig
 import me.kavishdevar.librepods.R
+import me.kavishdevar.librepods.data.NoiseControlMode
 import me.kavishdevar.librepods.presentation.components.AppInfoCard
+import me.kavishdevar.librepods.presentation.components.ListItemOrientation
 import me.kavishdevar.librepods.presentation.components.DeviceInfoCard
 import me.kavishdevar.librepods.presentation.components.StyledBottomSheet
 import me.kavishdevar.librepods.presentation.components.StyledButton
@@ -340,6 +345,47 @@ fun AppSettingsScreen(
                     enabled = state.isPremium
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            StyledList(
+                title = stringResource(R.string.listening_mode_shortcut),
+                description = stringResource(R.string.listening_mode_shortcut_description)
+            ) {
+                listOfNotNull(
+                    if (state.offListeningMode) NoiseControlMode.OFF to R.drawable.noise_cancellation else null,
+                    NoiseControlMode.TRANSPARENCY to R.drawable.transparency,
+                    NoiseControlMode.ADAPTIVE to R.drawable.adaptive,
+                    NoiseControlMode.NOISE_CANCELLATION to R.drawable.noise_cancellation
+                ).forEach { (mode, icon) ->
+                    val modeValue = mode.ordinal + 1
+                    StyledListItem(
+                        name = stringResource(
+                            when (mode) {
+                                NoiseControlMode.OFF -> R.string.off
+                                NoiseControlMode.TRANSPARENCY -> R.string.transparency
+                                NoiseControlMode.ADAPTIVE -> R.string.adaptive
+                                NoiseControlMode.NOISE_CANCELLATION -> R.string.noise_cancellation
+                            }
+                        ),
+                        selected = modeValue in state.toggleListeningModes,
+                        onClick = { viewModel.selectToggleListeningMode(modeValue) },
+                        orientation = ListItemOrientation.Vertical,
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(icon),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .height(42.dp)
+                                    .wrapContentWidth()
+                            )
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             StyledToggle(
                 title = stringResource(R.string.advanced_options), // shouldn't be here, but okay
