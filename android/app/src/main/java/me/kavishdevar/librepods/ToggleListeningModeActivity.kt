@@ -28,8 +28,8 @@ import me.kavishdevar.librepods.bluetooth.BluetoothConnectionManager
 import me.kavishdevar.librepods.data.NoiseControlMode
 import me.kavishdevar.librepods.services.ServiceManager
 
-// Headless target of the "Toggle listening mode" app shortcut, so launchers, Modes and Routines
-// or button-mapping apps can switch between two listening modes without opening the UI.
+// Headless target of the "Toggle listening mode" app shortcut. Switches between the two listening
+// modes picked in app settings without opening the UI.
 class ToggleListeningModeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,6 @@ class ToggleListeningModeActivity : Activity() {
 
     private fun getModeLabel(mode: Int): Int {
         return when (mode) {
-            NoiseControlMode.OFF.ordinal + 1 -> R.string.off
             NoiseControlMode.TRANSPARENCY.ordinal + 1 -> R.string.transparency
             NoiseControlMode.ADAPTIVE.ordinal + 1 -> R.string.adaptive
             else -> R.string.noise_cancellation
@@ -62,6 +61,14 @@ class ToggleListeningModeActivity : Activity() {
 
     companion object {
         const val PREF_KEY = "toggle_listening_modes"
+
+        // Off is left out on purpose. AirPods refuse it unless "Off Listening Mode" is enabled, which
+        // would leave the shortcut sending a mode that never applies.
+        val SELECTABLE_MODES = listOf(
+            NoiseControlMode.TRANSPARENCY,
+            NoiseControlMode.ADAPTIVE,
+            NoiseControlMode.NOISE_CANCELLATION
+        )
 
         private val DEFAULT_MODES = listOf(
             NoiseControlMode.NOISE_CANCELLATION.ordinal + 1,
@@ -73,6 +80,7 @@ class ToggleListeningModeActivity : Activity() {
             val modes = sharedPreferences.getString(PREF_KEY, null)
                 ?.split(",")
                 ?.mapNotNull { it.toIntOrNull() }
+                ?.filter { value -> SELECTABLE_MODES.any { it.ordinal + 1 == value } }
             return if (modes?.size == 2) modes else DEFAULT_MODES
         }
     }

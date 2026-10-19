@@ -39,7 +39,6 @@ data class AppSettingsUiState(
     val showIslandPopup: Boolean = true,
     val timeUntilFOSSPremiumExpiry: Long = 0L,
     val m3eEnabled: Boolean = false,
-    val offListeningMode: Boolean = true,
     val toggleListeningModes: List<Int> = emptyList()
 )
 
@@ -156,7 +155,6 @@ class AppSettingsViewModel(application: Application) : AndroidViewModel(applicat
                 showBottomSheetPopup = sharedPreferences.getBoolean("show_bottom_sheet_popup", true),
                 showIslandPopup = sharedPreferences.getBoolean("show_island_popup", true),
                 m3eEnabled = sharedPreferences.getBoolean("m3e_enabled", true),
-                offListeningMode = sharedPreferences.getBoolean("off_listening_mode", true),
                 toggleListeningModes = ToggleListeningModeActivity.getModes(sharedPreferences)
             )
         }

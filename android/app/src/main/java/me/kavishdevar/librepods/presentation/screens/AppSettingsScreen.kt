@@ -84,10 +84,11 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import me.kavishdevar.librepods.BuildConfig
 import me.kavishdevar.librepods.R
+import me.kavishdevar.librepods.ToggleListeningModeActivity
 import me.kavishdevar.librepods.data.NoiseControlMode
 import me.kavishdevar.librepods.presentation.components.AppInfoCard
-import me.kavishdevar.librepods.presentation.components.ListItemOrientation
 import me.kavishdevar.librepods.presentation.components.DeviceInfoCard
+import me.kavishdevar.librepods.presentation.components.ListItemOrientation
 import me.kavishdevar.librepods.presentation.components.StyledBottomSheet
 import me.kavishdevar.librepods.presentation.components.StyledButton
 import me.kavishdevar.librepods.presentation.components.StyledIconButton
@@ -352,22 +353,15 @@ fun AppSettingsScreen(
                 title = stringResource(R.string.listening_mode_shortcut),
                 description = stringResource(R.string.listening_mode_shortcut_description)
             ) {
-                listOfNotNull(
-                    if (state.offListeningMode) NoiseControlMode.OFF to R.drawable.noise_cancellation else null,
-                    NoiseControlMode.TRANSPARENCY to R.drawable.transparency,
-                    NoiseControlMode.ADAPTIVE to R.drawable.adaptive,
-                    NoiseControlMode.NOISE_CANCELLATION to R.drawable.noise_cancellation
-                ).forEach { (mode, icon) ->
+                ToggleListeningModeActivity.SELECTABLE_MODES.forEach { mode ->
                     val modeValue = mode.ordinal + 1
+                    val (name, icon) = when (mode) {
+                        NoiseControlMode.TRANSPARENCY -> R.string.transparency to R.drawable.transparency
+                        NoiseControlMode.ADAPTIVE -> R.string.adaptive to R.drawable.adaptive
+                        else -> R.string.noise_cancellation to R.drawable.noise_cancellation
+                    }
                     StyledListItem(
-                        name = stringResource(
-                            when (mode) {
-                                NoiseControlMode.OFF -> R.string.off
-                                NoiseControlMode.TRANSPARENCY -> R.string.transparency
-                                NoiseControlMode.ADAPTIVE -> R.string.adaptive
-                                NoiseControlMode.NOISE_CANCELLATION -> R.string.noise_cancellation
-                            }
-                        ),
+                        name = stringResource(name),
                         selected = modeValue in state.toggleListeningModes,
                         onClick = { viewModel.selectToggleListeningMode(modeValue) },
                         orientation = ListItemOrientation.Vertical,
