@@ -388,6 +388,15 @@ fun AppSettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             StyledToggle(
+                label = stringResource(R.string.show_toggle_in_app_list),
+                description = stringResource(R.string.show_toggle_in_app_list_description),
+                checked = state.showToggleInAppList,
+                onCheckedChange = viewModel::setShowToggleInAppList
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            StyledToggle(
                 title = stringResource(R.string.advanced_options), // shouldn't be here, but okay
                 label = stringResource(R.string.use_alternate_head_tracking_packets),
                 description = stringResource(R.string.use_alternate_head_tracking_packets_description),

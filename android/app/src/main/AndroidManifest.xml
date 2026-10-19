@@ -118,6 +118,20 @@
             android:noHistory="true"
             android:taskAffinity="" />
 
+        <activity-alias
+            android:name=".ToggleListeningModeLauncher"
+            android:targetActivity=".ToggleListeningModeActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/noise_cancellation"
+            android:label="@string/toggle_listening_mode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <service
             android:name=".services.AirPodsService"
             android:enabled="true"

@@ -19,7 +19,10 @@
 package me.kavishdevar.librepods
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -62,6 +65,24 @@ class ToggleListeningModeActivity : Activity() {
 
     companion object {
         const val PREF_KEY = "toggle_listening_modes"
+
+        // App shortcut launches carry FLAG_ACTIVITY_TASK_ON_HOME, which drops the user on the home
+        // screen when this activity finishes. The launcher alias lets button mappings launch it directly.
+        private fun launcherAlias(context: Context) =
+            ComponentName(context, "me.kavishdevar.librepods.ToggleListeningModeLauncher")
+
+        fun isShownInAppList(context: Context): Boolean =
+            context.packageManager.getComponentEnabledSetting(launcherAlias(context)) ==
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+
+        fun setShownInAppList(context: Context, shown: Boolean) {
+            context.packageManager.setComponentEnabledSetting(
+                launcherAlias(context),
+                if (shown) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                else PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
+                PackageManager.DONT_KILL_APP
+            )
+        }
 
         private val DEFAULT_MODES = listOf(
             NoiseControlMode.NOISE_CANCELLATION.ordinal + 1,

@@ -291,5 +291,7 @@
     <string name="eq_high">High</string>
     <string name="toggle_listening_mode">Toggle listening mode</string>
     <string name="listening_mode_shortcut">Listening mode shortcut</string>
+    <string name="show_toggle_in_app_list">Show in app list</string>
+    <string name="show_toggle_in_app_list_description">Adds \"Toggle listening mode\" to your app list. Use this for button mappings, such as the side key, so you stay in the app you were using. App shortcut launches always return to the home screen.</string>
     <string name="listening_mode_shortcut_description">The \"Toggle listening mode\" app shortcut switches between these two modes. Add it from your launcher, an automation app or a button mapping app.</string>
 </resources>
